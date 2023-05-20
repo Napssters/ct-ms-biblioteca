@@ -61,7 +61,6 @@ Crear una API tipo REST la cual permita llevar a cabo las siguientes funcionalid
              "fechaMaximaDevolucion" : "15/02/2021"
         }
     ```
-## Restricciones técnicas
-1. La base de datos debe ser en memoria, en el archivo application.properties ya se encuentra la configuración la cual está soportada por el motor H2, si necesita modificar estos archivos o algo de la conexión asegúrese de que sea una base de datos en memoria.
-    1. Si necesita ejecutar sentencias DDL(crear tablas, modificar tablas...) antes de que la aplicación se ejecute, debe crear un archivo llamado _schema.sql_ en la carpeta _src/main/resources_ y spring automáticamente lo ejecutará
+## Casos de prueba
+Recordar revisar el paquete de pruebas ` src/test/ ` donde se ecuentran las pruebas unitaias realizadas con Junit u Mockito
 
