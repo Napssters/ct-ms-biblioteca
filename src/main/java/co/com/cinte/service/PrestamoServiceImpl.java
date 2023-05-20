@@ -36,12 +36,12 @@ public class PrestamoServiceImpl implements PrestamoService {
         
         CrearPrestamoResponse response = null;
         try {
-            String fecha = FechaDevolucion(request.getTipoUsuario());
+            String fecha = fechaDevolucion(request.getTipoUsuario());
             
-            if (consultarUsuario(request.getTipoUsuario())) {
+            if (Boolean.TRUE.equals(consultarUsuario(request.getTipoUsuario()))) {
                 if (request.getTipoUsuario() == 3){
                     if (consultarPrestamo(request.getIdentificacionUsuario()) != null) {
-                        throw new BibliotecaException(ConstantesPrestamos.LIMITE_PRESTAMOS(request.getIdentificacionUsuario()), 1);
+                        throw new BibliotecaException(ConstantesPrestamos.limitePrestamos(request.getIdentificacionUsuario()), 1);
                     } else {
                         guardarPrestamo(request, fecha);
                         response = crearResponse(fecha);
@@ -118,7 +118,7 @@ public class PrestamoServiceImpl implements PrestamoService {
      * @return response con fecha e id
      * @throws java.lang.Exception
      **/
-    private CrearPrestamoResponse crearResponse(String fecha) throws BibliotecaException {
+    private CrearPrestamoResponse crearResponse(String fecha) {
         
         Integer id = prestamosDAO.asignarId();
         return CrearPrestamoResponse.builder()
@@ -140,7 +140,7 @@ public class PrestamoServiceImpl implements PrestamoService {
      * @param tipoUsuario
      * @return  fecha de devolucion del libro
      **/
-    private String FechaDevolucion(int tipoUsuario){
+    private String fechaDevolucion(int tipoUsuario){
         int dias = 0;
         if(tipoUsuario == 1){
             dias = 10;

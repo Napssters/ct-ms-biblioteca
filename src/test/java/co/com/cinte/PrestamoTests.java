@@ -35,25 +35,25 @@ class PrestamoTests {
     public static final int USUARIO_DESCONOCIDO = 5;
 
     @Autowired
-    private MockMvc mvc;
+    MockMvc mvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
 
     @Test
-    public void prestamoLibroUsuarioAfiliadoDeberiaAlmacenarCorrectamenteYCalcularFechaDeDevolucion() throws Exception {
+    void prestamoLibroUsuarioAfiliadoDeberiaAlmacenarCorrectamenteYCalcularFechaDeDevolucion() throws Exception {
 
         MvcResult resultadoLibroPrestado = mvc.perform(
                 MockMvcRequestBuilders.post("/prestamo")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroTest("ASDA7884", "974148", USUARIO_AFILIADO))))
+                        .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroDTO("ASDA7884", "974148", USUARIO_AFILIADO))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.fechaMaximaDevolucion").exists())
                 .andReturn();
 
 
-        ResultadoPrestarTest resultadoPrestamo = objectMapper.readValue(resultadoLibroPrestado.getResponse().getContentAsString(), ResultadoPrestarTest.class);
+        ResultadoPrestarDTO resultadoPrestamo = objectMapper.readValue(resultadoLibroPrestado.getResponse().getContentAsString(), ResultadoPrestarDTO.class);
 
         LocalDate fechaPrestamo = LocalDate.now();
         fechaPrestamo = addDaysSkippingWeekends(fechaPrestamo, 10);
@@ -75,19 +75,19 @@ class PrestamoTests {
     }
 
     @Test
-    public void prestamoLibroUsuarioEmpleadoDeberiaAlmacenarCorrectamenteYCalcularFechaDeDevolucion() throws Exception {
+    void prestamoLibroUsuarioEmpleadoDeberiaAlmacenarCorrectamenteYCalcularFechaDeDevolucion() throws Exception {
 
         MvcResult resultadoLibroPrestado = mvc.perform(MockMvcRequestBuilders
                 .post("/prestamo")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroTest("AWQ489", "7481545", USUARIO_EMPLEADO))))
+                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroDTO("AWQ489", "7481545", USUARIO_EMPLEADO))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.fechaMaximaDevolucion").exists())
                 .andReturn();
 
-        ResultadoPrestarTest resultadoPrestamo = objectMapper.readValue(resultadoLibroPrestado.getResponse().getContentAsString(), ResultadoPrestarTest.class);
+        ResultadoPrestarDTO resultadoPrestamo = objectMapper.readValue(resultadoLibroPrestado.getResponse().getContentAsString(), ResultadoPrestarDTO.class);
 
         LocalDate fechaPrestamo = LocalDate.now();
         fechaPrestamo = addDaysSkippingWeekends(fechaPrestamo, 8);
@@ -109,19 +109,19 @@ class PrestamoTests {
     }
 
     @Test
-    public void prestamoLibroUsuarioInvitadoDeberiaAlmacenarCorrectamenteYCalcularFechaDeDevolucion() throws Exception {
+    void prestamoLibroUsuarioInvitadoDeberiaAlmacenarCorrectamenteYCalcularFechaDeDevolucion() throws Exception {
 
         MvcResult resultadoLibroPrestado = mvc.perform(MockMvcRequestBuilders
                 .post("/prestamo")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroTest("EQWQW8545", "74851254", USUARIO_INVITADO))))
+                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroDTO("EQWQW8545", "74851254", USUARIO_INVITADO))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.fechaMaximaDevolucion").exists())
                 .andReturn();
 
-        ResultadoPrestarTest resultadoPrestamo = objectMapper.readValue(resultadoLibroPrestado.getResponse().getContentAsString(), ResultadoPrestarTest.class);
+        ResultadoPrestarDTO resultadoPrestamo = objectMapper.readValue(resultadoLibroPrestado.getResponse().getContentAsString(), ResultadoPrestarDTO.class);
 
         LocalDate fechaPrestamo = LocalDate.now();
         fechaPrestamo = addDaysSkippingWeekends(fechaPrestamo, 7);
@@ -143,12 +143,12 @@ class PrestamoTests {
     }
 
     @Test
-    public void usuarioInvitadoTratandoDePrestarUnSegundoLibroDeberiaRetornarExcepcion() throws Exception {
+    void usuarioInvitadoTratandoDePrestarUnSegundoLibroDeberiaRetornarExcepcion() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/prestamo")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroTest("EQWQW8545", "1111111111", USUARIO_INVITADO))))
+                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroDTO("EQWQW8545", "1111111111", USUARIO_INVITADO))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
@@ -157,7 +157,7 @@ class PrestamoTests {
         mvc.perform(MockMvcRequestBuilders
                 .post("/prestamo")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroTest("EQWQW8545", "1111111111", USUARIO_INVITADO))))
+                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroDTO("EQWQW8545", "1111111111", USUARIO_INVITADO))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.mensaje", is("El usuario con identificación 1111111111 ya tiene un libro prestado por lo cual no se le puede realizar otro préstamo")));
@@ -165,12 +165,12 @@ class PrestamoTests {
     }
 
     @Test
-    public void usuarioNoInvitadoTratandoDePrestarUnSegundoLibroDeberiaPrestarloCorrectamente() throws Exception {
+    void usuarioNoInvitadoTratandoDePrestarUnSegundoLibroDeberiaPrestarloCorrectamente() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/prestamo")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroTest("EQWQW8545", "1111111111", USUARIO_AFILIADO))))
+                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroDTO("EQWQW8545", "1111111111", USUARIO_AFILIADO))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
@@ -179,7 +179,7 @@ class PrestamoTests {
         mvc.perform(MockMvcRequestBuilders
                 .post("/prestamo")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroTest("EQWQW8545", "1111111111", USUARIO_AFILIADO))))
+                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroDTO("EQWQW8545", "1111111111", USUARIO_AFILIADO))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
@@ -188,12 +188,12 @@ class PrestamoTests {
     }
 
     @Test
-    public void prestamoConTipoDeUsuarioNoPermitidoDeberiaRetornarExcepcion() throws Exception {
+    void prestamoConTipoDeUsuarioNoPermitidoDeberiaRetornarExcepcion() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/prestamo")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroTest("EQWQW8545", "1111111111", USUARIO_DESCONOCIDO))))
+                .content(objectMapper.writeValueAsString(new SolicitudPrestarLibroDTO("EQWQW8545", "1111111111", USUARIO_DESCONOCIDO))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.mensaje", is("Tipo de usuario no permitido en la biblioteca")));

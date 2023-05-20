@@ -18,7 +18,7 @@ public class ConstantesPrestamos {
     /******************
      * Consultas Sql
      ******************/
-     public static String BUSCAR_TIPO_USUARIO = "select (tipoUsuario) from usuarios where tipoUsuario=?";
+    public static final String BUSCAR_TIPO_USUARIO = "select (tipoUsuario) from usuarios where tipoUsuario=?";
     
     public static final String CONSULTAR_PRESTAMO = "select * from prestamo where identificacionUsuario=?";
     
@@ -33,11 +33,15 @@ public class ConstantesPrestamos {
                                                     + "fechaMaximaDevolucion) "
                                                 + "values(?,?,?,?)";
     
-    public static String LIMITE_PRESTAMOS(String identificacion){
+    public static String limitePrestamos(String identificacion){
         return "El usuario con identificación "
                 + identificacion
                 + " ya tiene un libro prestado por lo cual "
                 + "no se le puede realizar otro préstamo";
+    }
+    
+    private ConstantesPrestamos() {
+        //Constructor
     }
     
 }

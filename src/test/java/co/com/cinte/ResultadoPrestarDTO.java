@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResultadoPrestarTest {
+public class ResultadoPrestarDTO {
 	
     private int id;
     

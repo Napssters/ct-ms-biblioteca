@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SolicitudPrestarLibroTest {
+public class SolicitudPrestarLibroDTO {
 
     private String isbn;
     

@@ -43,14 +43,15 @@ public class PrestamosDAOImpl implements PrestamosDAO {
     @Override
     public void savePrestamo(PrestamoResponse prestamoResponse) {
         String sql = ConstantesPrestamos.CREAR_PRESTAMO;
+        Object data = new Object[] {
+                prestamoResponse.getIsbn(), 
+                prestamoResponse.getIdentificacionUsuario(),
+                prestamoResponse.getTipoUsuario(),
+                prestamoResponse.getFechaMaximaDevolucion()
+            };
         template.update(
                 sql,
-                new Object[] {
-                    prestamoResponse.getIsbn(), 
-                    prestamoResponse.getIdentificacionUsuario(),
-                    prestamoResponse.getTipoUsuario(),
-                    prestamoResponse.getFechaMaximaDevolucion()
-                }
+                data
         );
     }
 
